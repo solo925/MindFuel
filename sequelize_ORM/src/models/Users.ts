@@ -6,6 +6,7 @@ class User extends Model {
     public name!: string;
     public email!: string;
     public password!: string;
+    public notificationPreference!: string;
 }
 
 User.init(
@@ -27,6 +28,10 @@ User.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        notificationPreference: {
+            type: DataTypes.STRING, // Example: "email", "push"
+            allowNull: true,
         },
     },
     {

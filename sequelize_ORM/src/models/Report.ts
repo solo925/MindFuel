@@ -1,14 +1,17 @@
-// src/models/Report.ts
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
+import Goal from './Goal';
+import Habit from './Habit';
+import Recommendation from './Recommendation'; // Ensure the path is correct
 import User from './Users';
 
 class Report extends Model {
     public id!: string;
     public userId!: ForeignKey<string>;
-    public date!: Date;
-    public mood!: number;
-    public energy!: number;
+    public habitId!: ForeignKey<string>;
+    public goalId!: ForeignKey<string>;
+    public recommendationId!: ForeignKey<string>;
+    public content!: string;
 }
 
 Report.init(
@@ -22,16 +25,20 @@ Report.init(
             type: DataTypes.UUID,
             allowNull: false,
         },
-        date: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
+        habitId: {
+            type: DataTypes.UUID,
+            allowNull: true, // Optional
         },
-        mood: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
+        goalId: {
+            type: DataTypes.UUID,
+            allowNull: true, // Optional
         },
-        energy: {
-            type: DataTypes.INTEGER,
+        recommendationId: {
+            type: DataTypes.UUID,
+            allowNull: true, // Optional
+        },
+        content: {
+            type: DataTypes.TEXT,
             allowNull: false,
         },
     },
@@ -45,5 +52,8 @@ Report.init(
 
 // Associations
 Report.belongsTo(User, { foreignKey: 'userId' });
+Report.belongsTo(Habit, { foreignKey: 'habitId' });
+Report.belongsTo(Goal, { foreignKey: 'goalId' });
+Report.belongsTo(Recommendation, { foreignKey: 'recommendationId' });
 
 export default Report;

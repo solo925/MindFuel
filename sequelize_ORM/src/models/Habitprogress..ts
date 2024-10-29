@@ -1,45 +1,50 @@
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
-import Goal from './Goal'; // Ensure the path is correct
+import Habit from './Habit';
 import User from './Users';
 
-class Recommendation extends Model {
+class HabitProgress extends Model {
     public id!: string;
+    public habitId!: ForeignKey<string>;
     public userId!: ForeignKey<string>;
-    public goalId!: ForeignKey<string>;
-    public message!: string;
+    public date!: Date;
+    public completed!: boolean;
 }
 
-Recommendation.init(
+HabitProgress.init(
     {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
+        habitId: {
+            type: DataTypes.UUID,
+            allowNull: false,
+        },
         userId: {
             type: DataTypes.UUID,
             allowNull: false,
         },
-        goalId: {
-            type: DataTypes.UUID,
+        date: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
-        message: {
-            type: DataTypes.STRING,
+        completed: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
         },
     },
     {
         sequelize,
-        modelName: 'Recommendation',
-        tableName: 'recommendations',
+        modelName: 'HabitProgress',
+        tableName: 'habit_progress',
         timestamps: true,
     }
 );
 
 // Associations
-Recommendation.belongsTo(User, { foreignKey: 'userId' });
-Recommendation.belongsTo(Goal, { foreignKey: 'goalId' });
+HabitProgress.belongsTo(Habit, { foreignKey: 'habitId' });
+HabitProgress.belongsTo(User, { foreignKey: 'userId' });
 
-export default Recommendation;
+export default HabitProgress;

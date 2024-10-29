@@ -1,16 +1,15 @@
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
-import Goal from './Goal'; // Ensure the path is correct
 import User from './Users';
 
-class Recommendation extends Model {
+class Notification extends Model {
     public id!: string;
     public userId!: ForeignKey<string>;
-    public goalId!: ForeignKey<string>;
     public message!: string;
+    public isRead!: boolean;
 }
 
-Recommendation.init(
+Notification.init(
     {
         id: {
             type: DataTypes.UUID,
@@ -21,25 +20,24 @@ Recommendation.init(
             type: DataTypes.UUID,
             allowNull: false,
         },
-        goalId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-        },
         message: {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        isRead: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         sequelize,
-        modelName: 'Recommendation',
-        tableName: 'recommendations',
+        modelName: 'Notification',
+        tableName: 'notifications',
         timestamps: true,
     }
 );
 
 // Associations
-Recommendation.belongsTo(User, { foreignKey: 'userId' });
-Recommendation.belongsTo(Goal, { foreignKey: 'goalId' });
+Notification.belongsTo(User, { foreignKey: 'userId' });
 
-export default Recommendation;
+export default Notification;
