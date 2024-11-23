@@ -1,6 +1,6 @@
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
-import Goal from './Goal'; // Ensure the path is correct
+import Goal from './Goal';
 import User from './Users';
 
 class Recommendation extends Model {

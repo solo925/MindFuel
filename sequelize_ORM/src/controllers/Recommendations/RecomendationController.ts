@@ -5,13 +5,12 @@ import Recommendation from '../../models/Recommendation';
 
 export const RecommendationController = express.Router();
 
-// Create a new recommendation
 RecommendationController.post('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { goalId, message } = req.body;
-        const userId = req.user!.id; // Using the ID from the verified token
+        const userId = req.user!.id;
 
-        // Check if the goal exists for the user
+
         const goal = await Goal.findOne({ where: { id: goalId, userId } });
         if (!goal) {
             res.status(404).json({ message: 'Goal not found for this user' });
@@ -31,7 +30,7 @@ RecommendationController.post('/', async (req: CustomRequest, res: Response): Pr
     }
 });
 
-// Retrieve all recommendations for the authenticated user
+
 RecommendationController.get('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user!.id;
@@ -48,7 +47,6 @@ RecommendationController.get('/', async (req: CustomRequest, res: Response): Pro
     }
 });
 
-// Update an existing recommendation
 RecommendationController.put('/:id', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const recommendationId = req.params.id;
@@ -72,7 +70,7 @@ RecommendationController.put('/:id', async (req: CustomRequest, res: Response): 
     }
 });
 
-// Delete a recommendation
+
 RecommendationController.delete('/:id', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const recommendationId = req.params.id;

@@ -9,10 +9,12 @@ import './models/associaetions';
 import mainRoute from './routes/main';
 
 
+
+
 const app = express();
 app.use(express.json());
 
-// Define routes here...
+
 
 app.get('/', (req, res) => {
     res.send('Welcome to MindFuel!');
@@ -21,8 +23,6 @@ app.get('/', (req, res) => {
 app.use('/api/v1', mainRoute)
 
 
-
-// Sync database
 sequelize.sync().then(() => {
     console.log('Database synced!');
 });

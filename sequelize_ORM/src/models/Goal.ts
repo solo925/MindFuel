@@ -1,6 +1,6 @@
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
-import User from './Users'; // Ensure the path is correct
+import User from './Users';
 
 class Goal extends Model {
     public id!: string;
@@ -37,7 +37,6 @@ Goal.init(
     }
 );
 
-// Move associations here
 Goal.belongsTo(User, { foreignKey: 'userId' });
 
 export default Goal;

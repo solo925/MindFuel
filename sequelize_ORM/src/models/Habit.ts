@@ -1,4 +1,3 @@
-// src/models/Habit.ts
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
 import User from './Users';
@@ -43,7 +42,7 @@ Habit.init(
     }
 );
 
-// Associations
+
 Habit.belongsTo(User, { foreignKey: 'userId' });
 
 export default Habit;

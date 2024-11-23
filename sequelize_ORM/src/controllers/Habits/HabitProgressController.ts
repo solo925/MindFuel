@@ -8,7 +8,7 @@ export const HabitProgressController = express.Router();
 HabitProgressController.post('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { habitId, completed } = req.body;
-        const userId = req.user!.id!; // Using the ID from the verified token
+        const userId = req.user!.id!;
 
         const progressLog = await HabitProgress.create({
             habitId,
@@ -17,7 +17,6 @@ HabitProgressController.post('/', async (req: CustomRequest, res: Response): Pro
             completed,
         });
 
-        // Create a notification if the habit is completed
         if (completed) {
             await Notification.create({
                 userId,
@@ -32,7 +31,7 @@ HabitProgressController.post('/', async (req: CustomRequest, res: Response): Pro
     }
 });
 
-// Retrieve progress logs for a specific habit
+
 HabitProgressController.get('/:habitId', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const habitId = req.params.habitId;

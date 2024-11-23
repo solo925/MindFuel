@@ -30,7 +30,7 @@ User.init(
             allowNull: false,
         },
         notificationPreference: {
-            type: DataTypes.STRING, // Example: "email", "push"
+            type: DataTypes.STRING,
             allowNull: true,
         },
     },

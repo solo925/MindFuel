@@ -5,11 +5,11 @@ import User from '../../models/Users';
 
 export const NotificationController = express.Router();
 
-// Create a new notification
+
 NotificationController.post('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { message } = req.body;
-        const userId = req.user?.id; // Using the ID from the verified token
+        const userId = req.user?.id;
 
         const notification = await Notification.create({
             userId,
@@ -23,7 +23,7 @@ NotificationController.post('/', verifyToken, async (req: CustomRequest, res: Re
     }
 });
 
-// Retrieve notifications for the authenticated user
+
 NotificationController.get('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user!.id!;
@@ -40,7 +40,7 @@ NotificationController.get('/', async (req: CustomRequest, res: Response): Promi
     }
 });
 
-// Mark notification as read
+
 NotificationController.put('/:id/read', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const notificationId = req.params.id;
@@ -63,7 +63,7 @@ NotificationController.put('/:id/read', async (req: CustomRequest, res: Response
     }
 });
 
-// Delete a notification
+
 NotificationController.delete('/:id', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const notificationId = req.params.id;
@@ -84,8 +84,7 @@ NotificationController.delete('/:id', async (req: CustomRequest, res: Response):
     }
 });
 
-// src/controllers/Users/NotificationSettingsController.tsdlewares/IsAuthenticated';
-// Update notification preferences
+
 NotificationController.put('/settings', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { notificationPreference } = req.body;

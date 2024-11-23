@@ -2,7 +2,7 @@ import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
 import Goal from './Goal';
 import Habit from './Habit';
-import Recommendation from './Recommendation'; // Ensure the path is correct
+import Recommendation from './Recommendation';
 import User from './Users';
 
 class Report extends Model {
@@ -27,15 +27,15 @@ Report.init(
         },
         habitId: {
             type: DataTypes.UUID,
-            allowNull: true, // Optional
+            allowNull: true,
         },
         goalId: {
             type: DataTypes.UUID,
-            allowNull: true, // Optional
+            allowNull: true,
         },
         recommendationId: {
             type: DataTypes.UUID,
-            allowNull: true, // Optional
+            allowNull: true,
         },
         content: {
             type: DataTypes.TEXT,
@@ -50,7 +50,7 @@ Report.init(
     }
 );
 
-// Associations
+
 Report.belongsTo(User, { foreignKey: 'userId' });
 Report.belongsTo(Habit, { foreignKey: 'habitId' });
 Report.belongsTo(Goal, { foreignKey: 'goalId' });

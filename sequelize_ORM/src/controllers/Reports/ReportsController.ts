@@ -4,11 +4,11 @@ import Report from '../../models/Report';
 
 export const ReportController = express.Router();
 
-// Create a new report
+
 ReportController.post('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { habitId, goalId, recommendationId, content } = req.body;
-        const userId = req.user!.id; // Using the ID from the verified token
+        const userId = req.user!.id;
 
         const report = await Report.create({
             userId,
@@ -25,7 +25,7 @@ ReportController.post('/', async (req: CustomRequest, res: Response): Promise<vo
     }
 });
 
-// Retrieve all reports for the authenticated user
+
 ReportController.get('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user!.id;
@@ -42,7 +42,7 @@ ReportController.get('/', async (req: CustomRequest, res: Response): Promise<voi
     }
 });
 
-// Update an existing report
+
 ReportController.put('/:id', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const reportId = req.params.id;
@@ -66,7 +66,7 @@ ReportController.put('/:id', async (req: CustomRequest, res: Response): Promise<
     }
 });
 
-// Delete a report
+
 ReportController.delete('/:id', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const reportId = req.params.id;

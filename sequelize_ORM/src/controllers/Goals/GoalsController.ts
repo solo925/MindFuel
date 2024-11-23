@@ -4,11 +4,10 @@ import Goal from '../../models/Goal';
 
 export const GoalController = express.Router();
 
-// Create a new goal
 GoalController.post('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { title } = req.body;
-        const userId = req.user!.id; // Using the ID from the verified token
+        const userId = req.user!.id;
 
         const goal = await Goal.create({
             userId,
@@ -22,7 +21,7 @@ GoalController.post('/', verifyToken, async (req: CustomRequest, res: Response):
     }
 });
 
-// Retrieve all goals for the authenticated user
+
 GoalController.get('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user!.id;
@@ -39,7 +38,7 @@ GoalController.get('/', verifyToken, async (req: CustomRequest, res: Response): 
     }
 });
 
-// Update an existing goal
+
 GoalController.put('/:id', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const goalId = req.params.id;
@@ -64,7 +63,7 @@ GoalController.put('/:id', verifyToken, async (req: CustomRequest, res: Response
     }
 });
 
-// Delete a goal
+
 GoalController.delete('/:id', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const goalId = req.params.id;

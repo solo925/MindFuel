@@ -8,7 +8,7 @@ export const sendNotification = async (userId: string, message: string): Promise
 
     const { notificationPreference } = user;
 
-    // Send notification based on user preference
+
     switch (notificationPreference) {
         case 'email':
             // Implement email sending logic here

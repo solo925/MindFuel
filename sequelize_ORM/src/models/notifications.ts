@@ -37,7 +37,7 @@ Notification.init(
     }
 );
 
-// Associations
+
 Notification.belongsTo(User, { foreignKey: 'userId' });
 
 export default Notification;

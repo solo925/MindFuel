@@ -4,11 +4,10 @@ import Habit from '../../models/Habit';
 
 export const HabitController = express.Router();
 
-// Create a new habit
 HabitController.post('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const { name, description, frequency } = req.body;
-        const userId = req.user?.id; // Using the ID from the verified token
+        const userId = req.user?.id;
 
         const habit = await Habit.create({
             userId,
@@ -24,7 +23,7 @@ HabitController.post('/', verifyToken, async (req: CustomRequest, res: Response)
     }
 });
 
-// Retrieve all habits for the authenticated user
+
 HabitController.get('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user!.id!;
@@ -43,21 +42,20 @@ HabitController.get('/', verifyToken, async (req: CustomRequest, res: Response):
 });
 HabitController.get('/:id', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
-        const habitId = req.params.id; // Get the habit ID from the route parameters
-        const userId = req.user?.id; // Get the user ID from the authenticated user
+        const habitId = req.params.id;
+        const userId = req.user?.id;
 
         if (!userId) {
             res.status(401).json({ message: 'User not authenticated' });
         }
 
-        // Find the habit by ID and ensure it belongs to the authenticated user
         const habit = await Habit.findOne({ where: { id: habitId, userId } });
 
         if (!habit) {
             res.status(404).json({ message: 'Habit not found' });
         }
 
-        res.status(200).json(habit); // Return the found habit
+        res.status(200).json(habit);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -65,7 +63,6 @@ HabitController.get('/:id', verifyToken, async (req: CustomRequest, res: Respons
 });
 
 
-// Update an existing habit
 HabitController.put('/:id', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const habitId = req.params!.id!;
@@ -91,7 +88,7 @@ HabitController.put('/:id', verifyToken, async (req: CustomRequest, res: Respons
     }
 });
 
-// Delete a habit
+
 HabitController.delete('/:id', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const habitId = req.params.id!;
