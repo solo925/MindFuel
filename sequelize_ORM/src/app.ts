@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import sequelize from './config/db';
 import './models/Goal';
@@ -13,6 +14,7 @@ import mainRoute from './routes/main';
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 
 

@@ -26,6 +26,7 @@ RegistrationController.post('/', async (req: Request, res: Response): Promise<vo
 
         if (password !== confirmpassword) {
             res.status(400).json({ message: 'Passwords do not match' });
+            return
         }
 
 
