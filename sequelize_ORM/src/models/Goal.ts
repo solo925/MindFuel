@@ -7,6 +7,8 @@ class Goal extends Model {
     public userId!: ForeignKey<string>;
     public title!: string;
     public achieved!: boolean;
+    public type!: 'daily' | 'weekly' | 'monthly' | 'yearly';
+    public rating!: number;
 }
 
 Goal.init(
@@ -27,6 +29,17 @@ Goal.init(
         achieved: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        type: {
+            type: DataTypes.ENUM('daily', 'weekly', 'monthly', 'yearly'),
+            allowNull: false,
+        },
+        rating: {
+            type: DataTypes.INTEGER,
+            validate: {
+                min: 1,
+                max: 5,
+            },
         },
     },
     {

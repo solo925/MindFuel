@@ -25,7 +25,10 @@ export const registerUser = createAsyncThunk(
         { rejectWithValue }
     ) => {
         try {
-            const response = await axios.post('/api/register', { name, email, password, confirmpassword });
+            const response = await axios.post('http://localhost:3000/api/v1/auth/register',
+                { name, email, password, confirmpassword },
+                { withCredentials: true });
+            
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Registration failed');
@@ -52,6 +55,7 @@ const registrationSlice = createSlice({
                 state.error = null;
             })
             .addCase(registerUser.fulfilled, (state, action: PayloadAction<{ user: any; token: string }>) => {
+                console.log('Token:', action.payload.token);
                 state.user = action.payload.user;
                 state.token = action.payload.token;
                 state.loading = false;

@@ -18,6 +18,7 @@ RegistrationController.post('/', async (req: Request, res: Response): Promise<vo
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
             res.status(400).json({ message: 'User already exists' });
+            return;
         }
 
 
@@ -44,10 +45,11 @@ RegistrationController.post('/', async (req: Request, res: Response): Promise<vo
             maxAge: 3600 * 1000,
         });
 
-        res.status(201).json({ user, token });
+        res.status(201).json({ message: "user registered succecsfully", user, token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
+        return;
     }
 });
 
