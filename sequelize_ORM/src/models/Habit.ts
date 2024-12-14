@@ -8,6 +8,8 @@ class Habit extends Model {
     public name!: string;
     public description?: string;
     public frequency!: number;
+    public unit!: string
+    public nextReminder?: Date;
 }
 
 Habit.init(
@@ -32,6 +34,14 @@ Habit.init(
         frequency: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        unit: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        nextReminder: {
+            type: DataTypes.DATE,
+            allowNull: true,
         },
     },
     {

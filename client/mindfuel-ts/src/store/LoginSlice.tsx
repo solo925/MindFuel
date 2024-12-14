@@ -24,7 +24,7 @@ export const loginUser = createAsyncThunk(
             const response = await axios.post(
                 'http://localhost:3000/api/v1/auth/login',
                 { email, password },
-                { withCredentials: true } // Required for cookie handling
+                { withCredentials: true } 
             );
 
             return response.data; // Expecting { user, token } in response
