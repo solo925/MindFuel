@@ -1,12 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { addGoal, deleteGoal, fetchGoals, updateGoal } from '../actions /goalsAction';
-import { Goal } from '../types/index';
+import { Goal, GoalsState } from '../types/index';
 
-interface GoalsState {
-  goals?: Goal[] | undefined;
-  loading?: boolean|undefined;
-  error?: string | null | undefined;
-}
 
 const initialState: GoalsState = {
   goals: [],

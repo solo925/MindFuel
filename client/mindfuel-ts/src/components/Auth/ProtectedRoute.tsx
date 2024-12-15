@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -8,9 +9,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const { token } = useSelector((state: RootState) => state.login);
+    const { loading } = useSelector((state: RootState) => state.login);
+    const token = Cookies.get('token');
+    console.log(token);
 
-    if (!token) {
+    if (!token && !loading) {
       
         return <Navigate to="/login" replace />;
     }

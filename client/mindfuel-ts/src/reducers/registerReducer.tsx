@@ -1,14 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { userTypes } from '../types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { registerUser } from '../actions /registerAction';
+import { RegistrationState } from '../types';
 
 
-interface RegistrationState {
-    user: null | userTypes;
-    token: string | null;
-    loading: boolean;
-    error: string | null;
-}
 
 const initialState: RegistrationState = {
     user: null,
@@ -17,24 +11,6 @@ const initialState: RegistrationState = {
     error: null,
 };
 
-
-export const registerUser = createAsyncThunk(
-    'registration/registerUser',
-    async (
-        { name, email, password, confirmpassword }: { name: string; email: string; password: string; confirmpassword: string },
-        { rejectWithValue }
-    ) => {
-        try {
-            const response = await axios.post('http://localhost:3000/api/v1/auth/register',
-                { name, email, password, confirmpassword },
-                { withCredentials: true });
-            
-            return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || 'Registration failed');
-        }
-    }
-);
 
 
 const registrationSlice = createSlice({

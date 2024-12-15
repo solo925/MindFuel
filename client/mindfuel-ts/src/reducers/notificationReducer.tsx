@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addNotification, fetchNotifications } from "../actions /notificatioAction";
 
 interface Notification {
   id?: number;
@@ -22,56 +22,6 @@ const initialState: NotificationsState = {
 };
 
 
-export const fetchNotifications = createAsyncThunk(
-  "notifications/fetchNotifications",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get<Notification[]>(
-        "http://localhost:3000/api/v1/notifications",
-        {
-          withCredentials: true, 
-        }
-      );
-
-      return response.data; 
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Something went wrong"
-      );
-    }
-  }
-);
-
-// Add a new notification
-export const addNotification = createAsyncThunk(
-  "notifications/addNotification",
-  async (
-    notificationData: { message: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const {message } = notificationData;
-      const response = await axios.post<Notification>(
-        "http://localhost:3000/api/v1/notifications",
-        { message },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Ensure cookies are sent
-        }
-      );
-
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Something went wrong"
-      );
-    }
-  }
-);
-
-
 // Slice
 const notificationsSlice = createSlice({
   name: "notifications",
@@ -91,7 +41,7 @@ const notificationsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchNotifications.fulfilled, (state, action) => {
+      .addCase(fetchNotifications.fulfilled, (state, action:PayloadAction<any>) => {
         state.notifications = action.payload;
         state.loading = false;
       })
@@ -99,7 +49,7 @@ const notificationsSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(addNotification.fulfilled, (state, action) => {
+      .addCase(addNotification.fulfilled, (state, action:PayloadAction<any>) => {
         state.notifications.unshift(action.payload);
       })
       .addCase(addNotification.rejected, (state, action) => {

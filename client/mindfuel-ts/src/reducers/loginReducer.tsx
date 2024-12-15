@@ -1,13 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { userTypes } from '../types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loginUser } from '../actions /loginAction';
+import { LoginState } from '../types';
 
-interface LoginState {
-    user: null | userTypes;
-    token: string | null;
-    loading: boolean;
-    error: string | null;
-}
 
 const initialState: LoginState = {
     user: null,
@@ -15,24 +9,6 @@ const initialState: LoginState = {
     loading: false,
     error: null,
 };
-
-// AsyncThunk for login
-export const loginUser = createAsyncThunk(
-    'login/loginUser',
-    async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-        try {
-            const response = await axios.post(
-                'http://localhost:3000/api/v1/auth/login',
-                { email, password },
-                { withCredentials: true } 
-            );
-
-            return response.data; // Expecting { user, token } in response
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || 'Login failed');
-        }
-    }
-);
 
 // Login slice
 const loginSlice = createSlice({
