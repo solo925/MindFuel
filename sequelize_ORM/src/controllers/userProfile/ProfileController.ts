@@ -8,7 +8,7 @@ export const ProfileController = express.Router();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/profile_photos');
+        cb(null, 'uploads');
     },
     filename: (req: CustomRequest, file, cb) => {
         cb(null, `${req.user!.id}_${Date.now()}${path.extname(file.originalname)}`);
@@ -43,6 +43,7 @@ ProfileController.put('/', verifyToken, upload.single('profilePhoto'), async (re
         const [affectedCount, updatedUsers] = await User.update(updatedData, {
             where: { id: req.user!.id },
             returning: true,
+
         });
 
         if (affectedCount === 0) {
@@ -50,7 +51,7 @@ ProfileController.put('/', verifyToken, upload.single('profilePhoto'), async (re
             return;
         }
 
-        res.json(updatedUsers[0]);
+        res.status(200).json(updatedUsers[0]);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });

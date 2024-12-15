@@ -4,19 +4,60 @@ import Habit from '../../models/Habit';
 
 export const HabitController = express.Router();
 
+
+/**
+ * Utility function to calculate nextReminder.
+ * @param frequency - The frequency value (e.g., 1, 2).
+ * @param unit - The unit of time (e.g., 'minute', 'hourly', 'daily', 'weekly', 'monthly').
+ * @returns The computed next reminder date.
+ */
+const calculateNextReminder = (frequency: number, unit: string): Date => {
+    const now = new Date();
+    switch (unit) {
+        case 'minute':
+            now.setMinutes(now.getMinutes() + frequency);
+            break;
+        case 'hourly':
+            now.setHours(now.getHours() + frequency);
+            break;
+        case 'daily':
+            now.setDate(now.getDate() + frequency);
+            break;
+        case 'weekly':
+            now.setDate(now.getDate() + frequency * 7);
+            break;
+        case 'monthly':
+            now.setMonth(now.getMonth() + frequency);
+            break;
+        default:
+            throw new Error('Invalid unit');
+    }
+    return now;
+};
+
 HabitController.post('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
-        const { name, description, frequency } = req.body;
+        const { name, description, frequency, unit } = req.body;
         const userId = req.user?.id;
+
+        if (!userId) {
+            res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const nextReminder = calculateNextReminder(frequency, unit);
 
         const habit = await Habit.create({
             userId,
             name,
             description,
             frequency,
+            unit,
+            nextReminder,
         });
 
-        res.status(201).json({ message: 'Habit created successfully', data: habit });
+        res.status(201).json(
+            habit,
+        );
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -24,9 +65,13 @@ HabitController.post('/', verifyToken, async (req: CustomRequest, res: Response)
 });
 
 
+
 HabitController.get('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const userId = req.user!.id!;
+        if (!userId) {
+            res.status(401).json({ message: 'User not authenticated' });
+        }
 
         const habits = await Habit.findAll({ where: { userId } });
         if (habits.length > 0) {

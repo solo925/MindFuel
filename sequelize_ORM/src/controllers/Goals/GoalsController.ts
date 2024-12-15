@@ -6,12 +6,13 @@ export const GoalController = express.Router();
 
 GoalController.post('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
-        const { title } = req.body;
+        const { title, type } = req.body;
         const userId = req.user!.id;
 
         const goal = await Goal.create({
             userId,
             title,
+            type
         });
 
         res.status(201).json({ message: 'Goal created successfully', data: goal });
@@ -42,7 +43,7 @@ GoalController.get('/', verifyToken, async (req: CustomRequest, res: Response): 
 GoalController.put('/:id', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
     try {
         const goalId = req.params.id;
-        const { title, achieved } = req.body;
+        const { title, achieved, rating } = req.body;
         const userId = req.user!.id;
 
         const goal = await Goal.findOne({ where: { id: goalId, userId } });
@@ -54,6 +55,7 @@ GoalController.put('/:id', verifyToken, async (req: CustomRequest, res: Response
 
         goal.title = title || goal.title;
         goal.achieved = achieved !== undefined ? achieved : goal.achieved;
+        goal.rating = rating !== undefined ? rating : goal.rating;
 
         await goal.save();
         res.json(goal);

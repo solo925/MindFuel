@@ -1,12 +1,16 @@
 import { DataTypes, ForeignKey, Model } from 'sequelize';
 import sequelize from '../config/db';
+import Habit from './Habit';
 import User from './Users';
 
 class Goal extends Model {
     public id!: string;
     public userId!: ForeignKey<string>;
+    public habitId!: ForeignKey<string>;
     public title!: string;
     public achieved!: boolean;
+    public type!: 'daily' | 'weekly' | 'monthly' | 'yearly';
+    public rating!: number;
 }
 
 Goal.init(
@@ -20,6 +24,10 @@ Goal.init(
             type: DataTypes.UUID,
             allowNull: false,
         },
+        habitId: {
+            type: DataTypes.UUID,
+            allowNull: true,
+        },
         title: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -27,6 +35,18 @@ Goal.init(
         achieved: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        type: {
+            type: DataTypes.ENUM('daily', 'weekly', 'monthly', 'yearly'),
+            allowNull: false,
+        },
+        rating: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+            validate: {
+                min: 1,
+                max: 5,
+            },
         },
     },
     {
@@ -37,6 +57,8 @@ Goal.init(
     }
 );
 
+// Define associations
 Goal.belongsTo(User, { foreignKey: 'userId' });
+Goal.belongsTo(Habit, { foreignKey: 'habitId' });
 
 export default Goal;

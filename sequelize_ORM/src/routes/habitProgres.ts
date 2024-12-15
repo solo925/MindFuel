@@ -1,8 +1,8 @@
-import express from 'express';
-import HabitProgressController from '../controllers/Habits/HabitProgressController';
+// import express from 'express';
+// import HabitProgressController from '../controllers/Habits/HabitProgressController';
 
-const habitprogresRoute = express.Router()
+// const habitprogresRoute = express.Router()
 
-habitprogresRoute.use('/', HabitProgressController)
+// habitprogresRoute.use('/', HabitProgressController)
 
-export default habitprogresRoute;
+// export default habitprogresRoute;

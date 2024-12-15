@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../actions /registerAction';
 import { AppDispatch, RootState } from '../../store';
-import { registerUser } from '../../store/RegisterSlices';
 
 
 const RegisterComponent: React.FC = () => {

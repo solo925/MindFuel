@@ -1,112 +1,79 @@
-import express, { Response } from 'express';
-import { CustomRequest, verifyToken } from '../../middlewares/Authmidlewares/IsAuthenticated';
-import Notification from '../../models/notifications';
-import User from '../../models/Users';
+import express from "express";
+import { CustomRequest, verifyToken } from "../../middlewares/Authmidlewares/IsAuthenticated";
+import Notification from "../../models/notifications";
 
 export const NotificationController = express.Router();
 
+// Fetch notifications for the logged-in user
+NotificationController.get("/", verifyToken, async (req: CustomRequest, res): Promise<void> => {
+    const userId = req.user?.id;
 
-NotificationController.post('/', verifyToken, async (req: CustomRequest, res: Response): Promise<void> => {
-    try {
-        const { message } = req.body;
-        const userId = req.user?.id;
-
-        const notification = await Notification.create({
-            userId,
-            message,
-        });
-
-        res.status(201).json({ message: 'Notification created successfully', data: notification });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+    if (!userId) {
+        res.status(400).json({ error: "User ID is missing" });
+        return
     }
-});
 
-
-NotificationController.get('/', async (req: CustomRequest, res: Response): Promise<void> => {
     try {
-        const userId = req.user!.id!;
-        const notifications = await Notification.findAll({ where: { userId } });
-
+        const notifications = await Notification.findAll({
+            where: { userId },
+            order: [["createdAt", "DESC"]],
+        });
         if (notifications.length > 0) {
             res.status(200).json(notifications);
         } else {
-            res.status(404).json({ message: 'No notifications found' });
+            res.status(404).json({ message: "No notifications found" });
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ error: "Error fetching notifications", error2: error });
     }
 });
 
+// Create a new notification
+NotificationController.post("/", verifyToken, async (req: CustomRequest, res): Promise<void> => {
+    const userId = req.user?.id;
+    const { message } = req.body;
 
-NotificationController.put('/:id/read', async (req: CustomRequest, res: Response): Promise<void> => {
+    if (!userId) {
+        res.status(400).json({ error: "User ID is missing" });
+        return
+    }
+
+    if (!message) {
+        res.status(400).json({ error: "Message is required" });
+        return
+    }
+
     try {
-        const notificationId = req.params.id;
-        const userId = req.user!.id!;
+        const notification = await Notification.create({
+            userId,
+            message,
+            read: false
+        });
 
-        const notification = await Notification.findOne({ where: { id: notificationId, userId } });
+        res.status(201).json({ data: notification, message: "Notification created successfully" });
+    } catch (error) {
+        res.status(500).json({ error: "Error creating notification", error2: error });
+    }
+});
+
+// Mark a notification as read
+NotificationController.patch("/:id/read", verifyToken, async (req, res): Promise<void> => {
+    const { id } = req.params;
+
+    try {
+        const notification = await Notification.findByPk(id);
 
         if (!notification) {
-            res.status(404).json({ message: 'Notification not found' });
-            return;
+            res.status(404).json({ error: "Notification not found" });
+            return
+        } else {
+            notification.read = true;
+            await notification.save();
+            res.json(notification);
         }
-
-        notification.isRead = true;
-        await notification.save();
-
-        res.json({ message: 'Notification marked as read', data: notification });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ error: "Error marking notification as read" });
     }
 });
-
-
-NotificationController.delete('/:id', async (req: CustomRequest, res: Response): Promise<void> => {
-    try {
-        const notificationId = req.params.id;
-        const userId = req.user!.id!;
-
-        const notification = await Notification.findOne({ where: { id: notificationId, userId } });
-
-        if (!notification) {
-            res.status(404).json({ message: 'Notification not found' });
-            return;
-        }
-
-        await notification.destroy();
-        res.json({ message: 'Notification deleted successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-
-NotificationController.put('/settings', async (req: CustomRequest, res: Response): Promise<void> => {
-    try {
-        const { notificationPreference } = req.body;
-        const userId = req.user!.id;
-
-        const user = await User.findByPk(userId);
-        if (!user) {
-            res.status(404).json({ message: 'User not found' });
-            return;
-        }
-
-        user.notificationPreference = notificationPreference;
-        await user.save();
-
-        res.json({ message: 'Notification preferences updated successfully', data: user });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-
-
 
 export default NotificationController;
