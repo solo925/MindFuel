@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../actions /loginAction';
 import { AppDispatch, RootState } from '../../store';
-import { loginUser } from '../../store/LoginSlice';
 
 const LoginComponent: React.FC = () => {
     const dispatch = useDispatch < AppDispatch > ();

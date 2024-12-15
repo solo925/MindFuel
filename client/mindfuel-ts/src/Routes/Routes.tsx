@@ -5,13 +5,16 @@ import ProtectedRoute from "../components/Auth/ProtectedRoute";
 import RegisterComponent from "../components/Auth/register";
 import GoalsPage from "../components/Goals";
 import HabitsComponent from "../components/habits";
+import Navbar from "../layout/NavBar";
 import NotFound from "../layout/NotFound";
 import HomePage from "../pages/home";
 
 const RouterComponent = () => {
     return (
         <Router>
-        <Routes>
+            <Navbar />
+            <Routes>
+            
                 <Route path="/register" element={<RegisterComponent />} />  
                 <Route
                     path="/goals"

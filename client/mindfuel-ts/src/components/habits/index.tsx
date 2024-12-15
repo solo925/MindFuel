@@ -2,8 +2,8 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createHabit, fetchHabits } from '../../actions /habitAction';
+import { addNotification, fetchNotifications } from '../../actions /notificatioAction';
 import { AppDispatch, RootState } from '../../store';
-import { addNotification, fetchNotifications } from '../../store/notificationSlice';
 
 const HabitsComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,11 +14,8 @@ const HabitsComponent: React.FC = () => {
   const [description, setDescription] = useState('');
   const [frequency, setFrequency] = useState<number>(1);
   const [unit, setUnit] = useState<string>('daily');
-  const [nextReminder, setNextReminder] = useState<string>('');
 
-  // Fetch token and userId from cookies
   const token = Cookies.get('token');
-  
 
   const unitOptions = [
     { value: 'minute', label: 'Every Minute' },
@@ -35,103 +32,163 @@ const HabitsComponent: React.FC = () => {
     }
   }, [dispatch, token]);
 
-
-
-  useEffect(() => {
-    console.log('Habits:', habits);
-  }, [habits]);
-  
   const handleAddHabit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) {
       alert('Please log in to create a habit.');
       return;
     }
-  
+
     try {
       const newHabit = { name, description, frequency, unit };
       await dispatch(createHabit(newHabit));
-      dispatch(fetchHabits())
+      dispatch(fetchHabits());
       await dispatch(addNotification({ message: `New habit created: ${name}` }));
-  
-      // Reset form fields
       setName('');
       setDescription('');
       setFrequency(1);
       setUnit('daily');
-      setNextReminder('');
     } catch (err) {
       console.error('Error creating habit:', err);
     }
   };
-  
+
   return (
-    <div>
-      <h1>Build a Habit</h1>
-      <form onSubmit={handleAddHabit}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Habit Name"
-          required
-        />
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Habit Description"
-        />
-        <input
-          type="number"
-          value={frequency}
-          onChange={(e) => setFrequency(Number(e.target.value))}
-          placeholder="Frequency"
-          min="1"
-          required
-        />
-        <select
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          required
+    <div style={{ display: 'flex', gap: '20px', padding: '20px', background: '#f8f9fc' }}>
+      {/* Left Panel: Habit List */}
+      <div style={{ flex: '1', borderRight: '1px solid #ddd', paddingRight: '20px' }}>
+        <h2 style={{ color: '#0b6cbf' }}>Your Habits</h2>
+        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+        {habits.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {habits.map((habit) => (
+              <li
+                key={habit.id}
+                style={{
+                  background: '#e6f2ff',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                }}
+              >
+                <strong>{habit.name}</strong> - {habit.description} (
+                {habit.frequency} {habit.unit})
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No habits found.</p>
+        )}
+      </div>
+
+      {/* Middle Panel: Notifications */}
+      <div style={{ flex: '1', borderRight: '1px solid #ddd', paddingRight: '20px' }}>
+        <h2 style={{ color: '#0b6cbf' }}>Notifications</h2>
+        {notifications.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {notifications.map((notification) => (
+              <li
+                key={notification.id}
+                style={{
+                  background: '#cce5ff',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                }}
+              >
+                {notification.message} -{' '}
+                <span style={{ color: notification.read ? 'green' : 'orange' }}>
+                  {notification.read ? 'Read' : 'Unread'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No notifications yet.</p>
+        )}
+      </div>
+
+      {/* Right Panel: Add Habit Form */}
+      <div style={{ flex: '1', paddingLeft: '20px' }}>
+        <h2 style={{ color: '#0b6cbf' }}>Add New Habit</h2>
+        <form
+          onSubmit={handleAddHabit}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            background: '#e9f7ff',
+            padding: '15px',
+            borderRadius: '8px',
+          }}
         >
-          {unitOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Adding...' : 'Add Habit'}
-        </button>
-      </form>
-
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-
-      <h2>Your Habits</h2>
-      {habits.length > 0 ? (
-        <ul>
-          {habits.map((habit) => (
-            <li key={habit.id}>
-              <strong>{habit.name}</strong> - {habit.description} ({habit.frequency} {habit.unit})
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No habits found.</p>
-      )}
-
-      <h2>Notifications</h2>
-      {notifications.length > 0 ? (
-        <ul>
-          {notifications.map((notification) => (
-            <li key={notification.id}>
-              {notification.message} - {notification.read ? 'Read' : 'Unread'}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No notifications yet.</p>
-      )}
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Habit Name"
+            required
+            style={{
+              padding: '8px',
+              border: '1px solid #b3d8ff',
+              borderRadius: '5px',
+            }}
+          />
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Habit Description"
+            style={{
+              padding: '8px',
+              border: '1px solid #b3d8ff',
+              borderRadius: '5px',
+            }}
+          />
+          <input
+            type="number"
+            value={frequency}
+            onChange={(e) => setFrequency(Number(e.target.value))}
+            placeholder="Frequency"
+            min="1"
+            required
+            style={{
+              padding: '8px',
+              border: '1px solid #b3d8ff',
+              borderRadius: '5px',
+            }}
+          />
+          <select
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+            required
+            style={{
+              padding: '8px',
+              border: '1px solid #b3d8ff',
+              borderRadius: '5px',
+            }}
+          >
+            {unitOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              backgroundColor: '#0b6cbf',
+              color: '#fff',
+              padding: '10px',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+            {loading ? 'Adding...' : 'Add Habit'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

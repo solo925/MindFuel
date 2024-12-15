@@ -26,25 +26,25 @@ const HomePage: React.FC = () => {
             <HabitCard
               title="Stretch"
               description="Improve flexibility with daily stretches."
-              image="https://via.placeholder.com/100x100"
+              image="/stretch.jpg"
               progress="80%"
             />
             <HabitCard
               title="No Coffee"
               description="Stay caffeine-free for better sleep."
-              image="https://via.placeholder.com/100x100"
+              image="/coffe.jpg"
               progress="100%"
             />
             <HabitCard
               title="No Snacking"
               description="Avoid snacks to maintain focus."
-              image="https://via.placeholder.com/100x100"
+              image="/snacks.jpg"
               progress="60%"
             />
             <HabitCard
               title="Workout"
               description="Engage in 30 minutes of exercise."
-              image="https://via.placeholder.com/100x100"
+              image="/workout.jpg"
               progress="90%"
             />
           </div>
