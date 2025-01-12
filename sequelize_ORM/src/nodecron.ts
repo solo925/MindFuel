@@ -18,9 +18,8 @@ const checkForNotifications = async (): Promise<void> => {
         });
 
         for (const habit of habits) {
-            const conv = parseInt(habit.userId)
             const notification = await Notification.create({
-                userId: conv,
+                userId: habit.userId,
                 message: `It's time to work on your habit: ${habit.name}`,
                 createdAt: new Date(),
             });

@@ -11,16 +11,12 @@ export const sendNotification = async (userId: string, message: string): Promise
 
     switch (notificationPreference) {
         case 'email':
-            // Implement email sending logic here
             console.log(`Sending email to user ${userId}: ${message}`);
             break;
 
         case 'push':
-            // Implement push notification logic here
             console.log(`Sending push notification to user ${userId}: ${message}`);
             break;
-
-        // Add more cases as needed
         default:
             console.log(`No notification method set for user ${userId}`);
             break;
