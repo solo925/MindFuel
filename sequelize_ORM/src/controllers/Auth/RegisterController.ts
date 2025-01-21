@@ -13,26 +13,34 @@ export const RegistrationController = express.Router();
 RegistrationController.post('/', asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { name, email, password, confirmpassword } = req.body;
 
+    const trimmedPassword = password.trim();
+    const trimmedConfirmPassword = confirmpassword.trim();
+
+    if (trimmedPassword !== trimmedConfirmPassword) {
+        next(new Error('Passwords do not match'));
+        return;
+    }
+
+
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-        next(new Error('User already exists')); 
+        next(new Error('User already exists'));
         return;
     }
 
-    if (password !== confirmpassword) {
-        next(new Error('Passwords do not match')); 
-        return;
-    }
+    
+    const hashedPassword: string = await bcrypt.hash(trimmedPassword, 10);
 
-    const hashedPassword: string = await bcrypt.hash(password, 10);
-
+    
     const user = await User.create({
         name,
         email,
         password: hashedPassword,
     });
 
+    
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+
 
     res.cookie('token', token, {
         httpOnly: true,
@@ -41,7 +49,9 @@ RegistrationController.post('/', asyncHandler(async (req: Request, res: Response
         maxAge: 3600 * 1000,
     });
 
+    // Return a success response
     res.status(201).json({ message: "User registered successfully", user, token });
 }));
+
 
 export default RegistrationController;

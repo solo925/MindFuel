@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1', mainRoute)
 
-
+// focrce:true
 sequelize.sync().then(() => {
     console.log('Database synced!');
 });

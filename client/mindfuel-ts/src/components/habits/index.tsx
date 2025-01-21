@@ -1,9 +1,10 @@
-import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createHabit, fetchHabits } from '../../actions /habitAction';
-import { addNotification, fetchNotifications } from '../../actions /notificatioAction';
 import { AppDispatch, RootState } from '../../store';
+import Cookies from 'js-cookie';
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, List, ListItem, Typography, Box } from '@mui/material';
+import { addNotification, fetchNotifications } from '../../actions /notificatioAction';
+import { createHabit, fetchHabits } from '../../actions /habitAction';
 
 const HabitsComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -54,142 +55,107 @@ const HabitsComponent: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '20px', padding: '20px', background: '#f8f9fc' }}>
+    <Box sx={{ display: 'flex', gap: 3, padding: 2, backgroundColor: '#f8f9fc' }}>
       {/* Left Panel: Habit List */}
-      <div style={{ flex: '1', borderRight: '1px solid #ddd', paddingRight: '20px' }}>
-        <h2 style={{ color: '#0b6cbf' }}>Your Habits</h2>
-        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      <Box sx={{ flex: 1, borderRight: '1px solid #ddd', pr: 3 }}>
+        <Typography variant="h6" color="primary">Your Habits</Typography>
+        {error && <Typography color="error">Error: {error}</Typography>}
         {habits.length > 0 ? (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <List>
             {habits.map((habit) => (
-              <li
-                key={habit.id}
-                style={{
-                  background: '#e6f2ff',
-                  padding: '10px',
-                  marginBottom: '10px',
-                  borderRadius: '5px',
-                }}
-              >
-                <strong>{habit.name}</strong> - {habit.description} (
-                {habit.frequency} {habit.unit})
-              </li>
+              <ListItem key={habit.id} sx={{ backgroundColor: '#e6f2ff', p: 2, borderRadius: '5px', mb: 1 }}>
+                <strong>{habit.name}</strong> - {habit.description} ({habit.frequency} {habit.unit})
+              </ListItem>
             ))}
-          </ul>
+          </List>
         ) : (
-          <p>No habits found.</p>
+          <Typography>No habits found.</Typography>
         )}
-      </div>
+      </Box>
 
       {/* Middle Panel: Notifications */}
-      <div style={{ flex: '1', borderRight: '1px solid #ddd', paddingRight: '20px' }}>
-        <h2 style={{ color: '#0b6cbf' }}>Notifications</h2>
+      <Box sx={{ flex: 1, borderRight: '1px solid #ddd', pr: 3 }}>
+        <Typography variant="h6" color="primary">Notifications</Typography>
         {notifications.length > 0 ? (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <List>
             {notifications.map((notification) => (
-              <li
+              <ListItem
                 key={notification.id}
-                style={{
-                  background: '#cce5ff',
-                  padding: '10px',
-                  marginBottom: '10px',
+                sx={{
+                  backgroundColor: '#cce5ff',
+                  p: 2,
                   borderRadius: '5px',
+                  mb: 1,
+                  color: notification.read ? 'green' : 'orange',
                 }}
               >
-                {notification.message} -{' '}
-                <span style={{ color: notification.read ? 'green' : 'orange' }}>
-                  {notification.read ? 'Read' : 'Unread'}
-                </span>
-              </li>
+                {notification.message} - {notification.read ? 'Read' : 'Unread'}
+              </ListItem>
             ))}
-          </ul>
+          </List>
         ) : (
-          <p>No notifications yet.</p>
+          <Typography>No notifications yet.</Typography>
         )}
-      </div>
+      </Box>
 
       {/* Right Panel: Add Habit Form */}
-      <div style={{ flex: '1', paddingLeft: '20px' }}>
-        <h2 style={{ color: '#0b6cbf' }}>Add New Habit</h2>
-        <form
-          onSubmit={handleAddHabit}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-            background: '#e9f7ff',
-            padding: '15px',
-            borderRadius: '8px',
-          }}
-        >
-          <input
-            type="text"
+      <Box sx={{ flex: 1, pl: 3 }}>
+        <Typography variant="h6" color="primary">Add New Habit</Typography>
+        <form onSubmit={handleAddHabit}>
+          <TextField
+            label="Habit Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Habit Name"
+            fullWidth
             required
-            style={{
-              padding: '8px',
-              border: '1px solid #b3d8ff',
-              borderRadius: '5px',
-            }}
+            margin="normal"
           />
-          <textarea
+          <TextField
+            label="Habit Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Habit Description"
-            style={{
-              padding: '8px',
-              border: '1px solid #b3d8ff',
-              borderRadius: '5px',
-            }}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
           />
-          <input
+          <TextField
+            label="Frequency"
             type="number"
             value={frequency}
             onChange={(e) => setFrequency(Number(e.target.value))}
-            placeholder="Frequency"
-            min="1"
+            fullWidth
             required
-            style={{
-              padding: '8px',
-              border: '1px solid #b3d8ff',
-              borderRadius: '5px',
-            }}
+            margin="normal"
+            inputProps={{ min: 1 }}
           />
-          <select
-            value={unit}
-            onChange={(e) => setUnit(e.target.value)}
-            required
-            style={{
-              padding: '8px',
-              border: '1px solid #b3d8ff',
-              borderRadius: '5px',
-            }}
-          >
-            {unitOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <button
+          <FormControl fullWidth required margin="normal">
+            <InputLabel>Unit</InputLabel>
+            <Select
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              label="Unit"
+            >
+              {unitOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
             type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
             disabled={loading}
-            style={{
-              backgroundColor: '#0b6cbf',
-              color: '#fff',
-              padding: '10px',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-            }}
+            sx={{ mt: 2 }}
           >
             {loading ? 'Adding...' : 'Add Habit'}
-          </button>
+          </Button>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

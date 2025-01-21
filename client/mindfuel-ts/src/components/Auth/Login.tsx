@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../actions /loginAction';
 import { AppDispatch, RootState } from '../../store';
+import InputField from '../forms/commoninput'; // Reusable InputField
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import { loginUser } from '../../actions /loginAction';
 
 const LoginComponent: React.FC = () => {
-    const dispatch = useDispatch < AppDispatch > ();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { loading, error, user } = useSelector((state: RootState) => state.login);
 
@@ -25,35 +29,58 @@ const LoginComponent: React.FC = () => {
     };
 
     if (user) {
-     
         navigate('/');
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm"
+            >
+                <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+                
+                {error && (
+                    <Alert severity="error" className="mb-4">
+                        {error}
+                    </Alert>
+                )}
+
+                {/* Using InputField component */}
+                <InputField
                     name="email"
                     placeholder="Email"
-                    onChange={handleChange}
                     value={formData.email}
-                />
-                <input
-                    name="password"
-                    placeholder="Password"
-                    type="password"
                     onChange={handleChange}
-                    value={formData.password}
                 />
-                <button type="submit" disabled={loading}>
-                    Login
-                </button>
-                {loading && <p>Loading...</p>}
-                {error && <p>Error: {error}</p>}
+                <div className="mt-4">
+                    <InputField
+                        name="password"
+                        placeholder="Password"
+                        type="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    disabled={loading}
+                    className="mt-6"
+                >
+                    {loading ? <CircularProgress size={24} /> : 'Login'}
+                </Button>
+
+                <p className="text-center text-sm text-gray-600 mt-4">
+                    Don't have an account?{' '}
+                    <a href="/register" className="text-blue-500 hover:underline">
+                        Register here
+                    </a>
+                </p>
             </form>
-            <p>
-                Don't have an account? <a href="/register">Register here</a>
-            </p>
         </div>
     );
 };
