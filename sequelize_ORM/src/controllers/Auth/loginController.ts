@@ -3,7 +3,9 @@ import express, { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../../models/Users';
 import { asyncHandler } from '../../middlewares/errorHandler';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 export const LoginController = express.Router();
 

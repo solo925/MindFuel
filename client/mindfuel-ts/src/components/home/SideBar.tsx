@@ -1,33 +1,69 @@
 import React from "react";
 import { FaCar, FaCog, FaMoon, FaShoppingCart, FaTint, FaUtensils } from "react-icons/fa";
+import { Drawer, List, ListItem, ListItemText, Typography, Divider } from "@mui/material";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="h-screen w-60 bg-gray-50 border-r border-gray-200 p-5">
-      <h1 className="text-2xl font-bold mb-8 flex items-center">
-        <span className="text-indigo-600 mr-2">🧠</span> MindFuel
-      </h1>
-      <ul className="space-y-5 text-gray-700">
-        <li className="flex items-center font-semibold text-indigo-600">
-          <FaShoppingCart className="mr-3" /> Home
-        </li>
-        <li className="flex items-center">
-          <FaUtensils className="mr-3" /> Meals
-        </li>
-        <li className="flex items-center">
-          <FaTint className="mr-3" /> Water
-        </li>
-        <li className="flex items-center">
-          <FaMoon className="mr-3" /> Sleep
-        </li>
-        <li className="flex items-center">
-          <FaCar className="mr-3" /> Customize
-        </li>
-        <li className="flex items-center">
-          <FaCog className="mr-3" /> Settings
-        </li>
-      </ul>
-    </div>
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: 240,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: 240,
+          backgroundColor: "#f8fafc", // Light gray background
+          borderRight: "1px solid #e5e7eb", // Border on right
+          padding: 2,
+        },
+      }}
+    >
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: "bold",
+          display: "flex",
+          alignItems: "center",
+          color: "#4f46e5", // Indigo color
+          marginBottom: 3,
+        }}
+      >
+        <span style={{ marginRight: 8 }}>🧠</span> MindFuel
+      </Typography>
+
+      <Divider sx={{ marginBottom: 2 }} />
+
+      <List sx={{ padding: 0 }}>
+        <ListItem sx={{ display: "flex", alignItems: "center" }} component="li" onClick={() => console.log("Home clicked")}>
+          <FaShoppingCart style={{ marginRight: 16 }} />
+          <ListItemText primary="Home" sx={{ color: "#4f46e5", fontWeight: "bold" }} />
+        </ListItem>
+
+        <ListItem sx={{ display: "flex", alignItems: "center" }} component="li" onClick={() => console.log("Meals clicked")}>
+          <FaUtensils style={{ marginRight: 16 }} />
+          <ListItemText primary="Meals" />
+        </ListItem>
+
+        <ListItem sx={{ display: "flex", alignItems: "center" }} component="li" onClick={() => console.log("Water clicked")}>
+          <FaTint style={{ marginRight: 16 }} />
+          <ListItemText primary="Water" />
+        </ListItem>
+
+        <ListItem sx={{ display: "flex", alignItems: "center" }} component="li" onClick={() => console.log("Sleep clicked")}>
+          <FaMoon style={{ marginRight: 16 }} />
+          <ListItemText primary="Sleep" />
+        </ListItem>
+
+        <ListItem sx={{ display: "flex", alignItems: "center" }} component="li" onClick={() => console.log("Customize clicked")}>
+          <FaCar style={{ marginRight: 16 }} />
+          <ListItemText primary="Customize" />
+        </ListItem>
+
+        <ListItem sx={{ display: "flex", alignItems: "center" }} component="li" onClick={() => console.log("Settings clicked")}>
+          <FaCog style={{ marginRight: 16 }} />
+          <ListItemText primary="Settings" />
+        </ListItem>
+      </List>
+    </Drawer>
   );
 };
 

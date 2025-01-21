@@ -8,8 +8,8 @@ import { createHabit, fetchHabits } from '../../actions /habitAction';
 
 const HabitsComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { habits, loading, error } = useSelector((state: RootState) => state.habits);
-  const { notifications } = useSelector((state: RootState) => state.notifications);
+  const { habits, loading: habitsLoading, error: habitsError } = useSelector((state: RootState) => state.habits);
+  const { notifications, loading: notificationsLoading, error: notificationsError } = useSelector((state: RootState) => state.notifications);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -55,51 +55,60 @@ const HabitsComponent: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', gap: 3, padding: 2, backgroundColor: '#f8f9fc' }}>
+    <Box sx={{ display: 'flex', gap: 3, padding: 2, backgroundColor: '#f8f9fc', height: '100vh', zIndex: 1 }}>
       {/* Left Panel: Habit List */}
-      <Box sx={{ flex: 1, borderRight: '1px solid #ddd', pr: 3 }}>
+      <Box sx={{ flex: 1, borderRight: '1px solid #ddd', pr: 3, overflowY: 'auto' }}>
         <Typography variant="h6" color="primary">Your Habits</Typography>
-        {error && <Typography color="error">Error: {error}</Typography>}
-        {habits.length > 0 ? (
-          <List>
-            {habits.map((habit) => (
-              <ListItem key={habit.id} sx={{ backgroundColor: '#e6f2ff', p: 2, borderRadius: '5px', mb: 1 }}>
-                <strong>{habit.name}</strong> - {habit.description} ({habit.frequency} {habit.unit})
-              </ListItem>
-            ))}
-          </List>
+        {habitsError && <Typography color="error">Error fetching habits: {habitsError}</Typography>}
+        {habitsLoading ? (
+          <Typography>Loading habits...</Typography>
         ) : (
-          <Typography>No habits found.</Typography>
+          habits.length > 0 ? (
+            <List>
+              {habits.map((habit) => (
+                <ListItem key={habit.id} sx={{ backgroundColor: '#e6f2ff', p: 2, borderRadius: '5px', mb: 1 }}>
+                  <strong>{habit.name}</strong> - {habit.description} ({habit.frequency} {habit.unit})
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography>No habits found.</Typography>
+          )
         )}
       </Box>
 
       {/* Middle Panel: Notifications */}
-      <Box sx={{ flex: 1, borderRight: '1px solid #ddd', pr: 3 }}>
+      <Box sx={{ flex: 1, borderRight: '1px solid #ddd', pr: 3, overflowY: 'auto' }}>
         <Typography variant="h6" color="primary">Notifications</Typography>
-        {notifications.length > 0 ? (
-          <List>
-            {notifications.map((notification) => (
-              <ListItem
-                key={notification.id}
-                sx={{
-                  backgroundColor: '#cce5ff',
-                  p: 2,
-                  borderRadius: '5px',
-                  mb: 1,
-                  color: notification.read ? 'green' : 'orange',
-                }}
-              >
-                {notification.message} - {notification.read ? 'Read' : 'Unread'}
-              </ListItem>
-            ))}
-          </List>
+        {notificationsError && <Typography color="error">Error fetching notifications: {notificationsError}</Typography>}
+        {notificationsLoading ? (
+          <Typography>Loading notifications...</Typography>
         ) : (
-          <Typography>No notifications yet.</Typography>
+          notifications.length > 0 ? (
+            <List>
+              {notifications.map((notification) => (
+                <ListItem
+                  key={notification.id}
+                  sx={{
+                    backgroundColor: '#cce5ff',
+                    p: 2,
+                    borderRadius: '5px',
+                    mb: 1,
+                    color: notification.read ? 'green' : 'orange',
+                  }}
+                >
+                  {notification.message} - {notification.read ? 'Read' : 'Unread'}
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography>No notifications yet.</Typography>
+          )
         )}
       </Box>
 
       {/* Right Panel: Add Habit Form */}
-      <Box sx={{ flex: 1, pl: 3 }}>
+      <Box sx={{ flex: 1, pl: 3, overflowY: 'auto' }}>
         <Typography variant="h6" color="primary">Add New Habit</Typography>
         <form onSubmit={handleAddHabit}>
           <TextField
@@ -160,3 +169,4 @@ const HabitsComponent: React.FC = () => {
 };
 
 export default HabitsComponent;
+

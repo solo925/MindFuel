@@ -1,4 +1,5 @@
 import React from "react";
+import { Card, CardContent, Typography, CardMedia, LinearProgress } from "@mui/material";
 
 interface HabitCardProps {
   title: string;
@@ -13,19 +14,30 @@ const HabitCard: React.FC<HabitCardProps> = ({
   image,
   progress,
 }) => {
+  // Convert progress to a number for LinearProgress (percentage)
+  const progressPercentage = parseInt(progress);
+
   return (
-    <div className="flex items-center border rounded-lg p-5 shadow-sm">
-      <img
-        src={image}
+    <Card sx={{ display: "flex", mb: 2, borderRadius: "10px", boxShadow: 3 }}>
+      <CardMedia
+        component="img"
+        sx={{ width: 100, height: 80, objectFit: "cover", borderRadius: 1 }}
+        image={image}
         alt={title}
-        className="w-28 h-20 object-cover rounded-lg mr-4"
       />
-      <div>
-        <h2 className="font-bold text-lg">{title}</h2>
-        <p className="text-gray-600 text-sm">{description}</p>
-        <p className="text-gray-500 text-sm">Completed {progress} today.</p>
-      </div>
-    </div>
+      <CardContent sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          {title}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+          {description}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+          Completed {progress}% today.
+        </Typography>
+        <LinearProgress variant="determinate" value={progressPercentage} sx={{ height: 5 }} />
+      </CardContent>
+    </Card>
   );
 };
 

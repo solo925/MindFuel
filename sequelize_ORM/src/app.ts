@@ -13,6 +13,7 @@ import { globalErrorHandler } from './middlewares/errorHandler';
 import configureCors from './config/corsConfig';
 import urlVersioning from './middlewares/apiVersion/apiversionMiddleware';
 import { addTimeStamp, requestLogger } from './middlewares/customeMidlleware';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -23,15 +24,8 @@ app.use(configureCors())
 app.use(urlVersioning("v1"))
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(globalErrorHandler);
-
-
-// app.use(cors({
-//     origin: 'http://localhost:5173',
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-// }));
 
 
 
