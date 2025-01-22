@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    image: solo925/mindfuel-backend:latest  # The backend image you've built
+    container_name: mindfuel-backend
+    ports:
+      - "3000:3000"  # Exposing the backend API
+    environment:
+      - DB_NAME=mindfuel
+      - DB_USER=mindfuel_user
+      - DB_PASSWORD=S02970055p
+      - DB_HOST=db  # Use the service name "db" to connect within the Docker network
+      - DB_PORT=5432
+      - PORT=3000
+      
+    depends_on:
+      - db
+
+  db:
+    image: postgres:alpine  # Official PostgreSQL image
+    container_name: mindfuel-db
+    environment:
+      - POSTGRES_USER=mindfuel_user
+      - POSTGRES_PASSWORD=S02970055p
+      - POSTGRES_DB=mindfuel
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
+
+# docker-compose up
