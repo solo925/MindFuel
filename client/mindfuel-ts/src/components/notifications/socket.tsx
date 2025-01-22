@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import store from "../../store";
-import { addNotification } from "../../store/habits";
+import { addNotification } from "../../reducers/habitsReducer";
+
 
 const socket: Socket = io("http://localhost:3000"); 
 

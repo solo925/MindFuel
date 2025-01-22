@@ -157,10 +157,11 @@ const HabitsComponent: React.FC = () => {
             variant="contained"
             color="primary"
             fullWidth
-            disabled={loading}
+            // disabled={loading}
             sx={{ mt: 2 }}
           >
-            {loading ? 'Adding...' : 'Add Habit'}
+            {/* {loading ? 'Adding...' : 'Add Habit'} */}
+            'Add Habit'
           </Button>
         </form>
       </Box>
